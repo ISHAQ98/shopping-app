@@ -45,6 +45,7 @@ body {
 
   gap: 0.8rem;
 }
+
 button,
 select,
 input {
@@ -122,4 +123,9 @@ input[type="checkbox"] {
   text-align: center;
   font-weight: 700;
   padding: 3.2rem 0;
+}
+
+.item-image {
+  width: 8vw;
+  border-radius: 50%;
 }

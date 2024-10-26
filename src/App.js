@@ -10,7 +10,7 @@ export default function App() {
 
   function handleAddProduct(item) {
     setItems((items) => [...items, item]);
-    console.log(item.id);
+    console.log(item.product);
     console.log(items);
   }
 
@@ -31,13 +31,22 @@ export default function App() {
           onShowItemsPage={handleShowItemsPage}
           onAddItem={handleAddProduct}
         />
-        <Main showItemPage={showItemPage} items={items} />
+        <Main showItemPage={showItemPage} items={items}>
+          <Btn>Select</Btn>
+        </Main>
         <Footer />
       </div>
     </div>
   );
 }
 
+function Btn({ children, onClick }) {
+  return (
+    <button onClick={onClick} className="button">
+      {children}
+    </button>
+  );
+}
 function Header() {
   return (
     <header className="header">
@@ -48,7 +57,7 @@ function Header() {
 function AddProduct({ onShowItemsPage, onAddItem }) {
   const [product, setProduct] = useState("");
   const [quantity, setQuantity] = useState(1);
-
+  const image = "https://i.pravatar.cc/48";
   function handleItemsPage() {
     console.log("clicked");
     onShowItemsPage(false);
@@ -56,13 +65,18 @@ function AddProduct({ onShowItemsPage, onAddItem }) {
   const id = crypto.randomUUID();
   let newItem = {
     id,
-    product: { product },
-    image: "👚",
-    quantity: { quantity },
+    product,
+    image: `${image}?=${id}`,
+    quantity,
   };
   function handleAddNewProduct() {
+    if (!product || !quantity) return;
     onAddItem(newItem);
-    // console.log(newItem.id);
+
+    setProduct("");
+    setQuantity(1);
+
+    // console.log(newItem.image);
   }
 
   return (
@@ -84,12 +98,12 @@ function AddProduct({ onShowItemsPage, onAddItem }) {
         value={product}
         onChange={(e) => setProduct(e.target.value)}
       ></input>
-      <button className="button" onClick={() => handleAddNewProduct()}>
+      <Btn className="button" onClick={() => handleAddNewProduct()}>
         Add Item
-      </button>
-      <button onClick={() => handleItemsPage()} className="button">
+      </Btn>
+      <Btn onClick={() => handleItemsPage()} className="button">
         Items Card
-      </button>
+      </Btn>
     </div>
   );
 }
@@ -107,7 +121,7 @@ function ShoppingProducts({ items }) {
       <h1>Pick Products</h1>
       <ul className="item-list" style={{ backgroundColor: "#f89930" }}>
         {items.map((item) => (
-          <Item key={item.id} />
+          <Item key={item.id} item={item} />
         ))}
       </ul>
       <ul></ul>
@@ -119,15 +133,23 @@ function ItemsPage() {
   return <ul className="item-list"></ul>;
 }
 
-function Item() {
+function Item({ item }) {
+  const [deleteItem, setDeleteItem] = useState(false);
+  function handleDeleteItem() {
+    console.log("delete");
+  }
+  console.log(item);
   return (
     <li className="item">
-      <span className="item-image">👚 </span>
-      <span className="item-name">Product name </span>
+      <img className="item-image" src={item.image} alt={item.product} />
+      <h3>{item.product} </h3>
+      <h3>{item.quantity} </h3>
       <div className="item-actions">
         <input className="checkbox" type="checkbox"></input>
-        <button className="edit-btn">Edit</button>
-        <button className="delete-btn">Delete</button>
+        <Btn className="edit-btn">Add to card</Btn>
+        <Btn onClick={() => handleDeleteItem()} className="delete-btn">
+          Delete
+        </Btn>
       </div>
     </li>
     // <li className="item">
