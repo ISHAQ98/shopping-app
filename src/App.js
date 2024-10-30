@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./index.css";
 import data from "./data.js";
 
@@ -10,10 +10,21 @@ export default function App() {
 
   function handleAddProduct(item) {
     setItems((items) => [...items, item]);
+    function storedItems() {
+      const getValues = localStorage.getItem("items");
+      return JSON.parse(getValues);
+    }
+    storedItems();
     console.log(item.product);
     console.log(items);
   }
-
+  useEffect(
+    function () {
+      localStorage.setItem("items", JSON.stringify(items));
+      console.log(items);
+    },
+    [items]
+  );
   function handleShowItemsPage() {
     setShowItemPage((show) => !show);
   }
@@ -119,8 +130,8 @@ function ShoppingProducts({ items }) {
   return (
     <div>
       <h1>Pick Products</h1>
-      <ul className="item-list" style={{ backgroundColor: "#f89930" }}>
-        {items.map((item) => (
+      <ul className="item-list" style={{ backgroundColor: "#6f99e5" }}>
+        {items?.map((item) => (
           <Item key={item.id} item={item} />
         ))}
       </ul>
